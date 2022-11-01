@@ -70,7 +70,7 @@ prepare_build_dir() {
 	say "Preparing build directory ..."
 	[ -d "$build_dir" ] || die "Missing build dir" $build_dir
 	find "$build_dir" -mindepth 1 -delete
-	cp "$pkg_dir"/* "$build_dir"
+	cp -r "$pkg_dir"/* "$build_dir"
 }
 
 install_deps() {
