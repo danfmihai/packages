@@ -1,6 +1,9 @@
 uboot-pikvm-aarch64
 watchdog
-tailscale
+tailscale-pikvm
+python-argcomplete
+python-ajsonrpc
+python-pyserial-asyncio
 python-pyghmi
 python-spidev
 python-raspberry-gpio
@@ -9,6 +12,7 @@ python-pyftdi
 python-smbus2
 python-luma-core
 python-luma-oled
+python-pyrad
 raspberrypi-io-access
 libgpiod
 ttyd
@@ -17,3 +21,6 @@ avrdude-svn
 ustreamer
 kvmd
 kvmd-webterm
+kvmd-oled
+kvmd-fan
+vi-vim-symlink
