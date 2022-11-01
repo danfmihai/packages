@@ -2,8 +2,14 @@
 
 
 pkgbase=uboot-pikvm
-pkgname=('uboot-pikvm-orangepi-pc2')
-pkgver=2020.10 #2022.04
+pkgname=('uboot-pikvm-rock64-rk3328'
+		'uboot-pikvm-roc-cc-rk3328'
+		'uboot-pikvm-nanopi-r2s-rk3328'
+		'uboot-pikvm-rock-pi-e-rk3328'
+        'uboot-pikvm-nanopi-neo2'
+        'uboot-pikvm-orangepi-zero-plus'        
+        'uboot-pikvm-libretech-all-h3-cc-h5')
+pkgver=2020.10
 pkgrel=1
 arch=('aarch64')
 url="http://git.denx.de/u-boot.git/"
@@ -13,29 +19,35 @@ depends=('uboot-tools')
 backup=(boot/boot.txt boot/boot.scr)
 source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver}.tar.bz2"
 		"https://github.com/ARM-software/arm-trusted-firmware/archive/v2.3.tar.gz"
-		'sun50i-h5-orangepi-pc2.dtb'
+		'100-nanopi-r2s-rk3328.patch'
+		'rk3328-nanopi-r2s.dtb'
 		'boot.txt.rock64'
         'boot.txt.sunxi'
         'mkscr')
-md5sums=(SKIP SKIP SKIP SKIP SKIP SKIP)
+md5sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
 
 
-boards_rk3328=()
+boards_rk3328=('rock64-rk3328'
+			'roc-cc-rk3328'
+			'nanopi-r2s-rk3328'
+			'rock-pi-e-rk3328')
             
-boards_sun50i_h5=('orangepi_pc2')            
+boards_sun50i_h5=('nanopi_neo2'
+            'orangepi_zero_plus'
+            'libretech_all_h3_cc_h5')            
 
 prepare() {
   unset CFLAGS CXXFLAGS LDFLAGS
   cd ${srcdir}/arm-trusted-firmware-2.3
-  #make PLAT=rk3328 all
-  #make clean
+  make PLAT=rk3328 all
+  make clean
   make PLAT=sun50i_a64 all
 }
 
 build() {
   unset CFLAGS CXXFLAGS LDFLAGS
   cd ${srcdir}/u-boot-${pkgver}
-  # patch -p1 < ../100-nanopi-r2s-rk3328.patch
+  patch -p1 < ../100-nanopi-r2s-rk3328.patch
   
   for i in ${boards_rk3328[@]}; do
     mkdir ../bin_${i}
@@ -146,18 +158,6 @@ package_uboot-pikvm-libretech-all-h3-cc-h5() {
 
   install -d "${pkgdir}"/boot
   install -Dm644 bin_libretech_all_h3_cc_h5/u-boot.bin "${pkgdir}"/boot
-
-  install -Dm644 boot.txt.sunxi "${pkgdir}"/boot/boot.txt
-  install -Dm644 boot.scr.sunxi "${pkgdir}"/boot/boot.scr
-  install -Dm755 mkscr "${pkgdir}"/boot/mkscr
-}
-
-package_uboot-pikvm-orangepi-pc2() {
-  pkgdesc="U-Boot for Orange Pi PC2"
-  install=uboot-sunxi.install
-
-  install -d "${pkgdir}"/boot
-  install -Dm644 bin_orangepi_pc2/u-boot.bin "${pkgdir}"/boot
 
   install -Dm644 boot.txt.sunxi "${pkgdir}"/boot/boot.txt
   install -Dm644 boot.scr.sunxi "${pkgdir}"/boot/boot.scr
